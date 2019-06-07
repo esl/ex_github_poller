@@ -87,7 +87,7 @@ defmodule ExGithubPoller do
     data
   end
 
-  def filter({events,headers,next_link} = data, last_event) do
+  def filter({events,headers,next_link} , last_event) do
 
     # require IEx ; IEx.pry()
 
@@ -127,6 +127,11 @@ defmodule ExGithubPoller do
       "Authorization" => "token #{token}"
     }
 
+    rheaders = case param.etag do
+      nil -> rheaders
+      etag ->  Map.put(rheaders, "If-None-Match", etag)
+    end
+
     case HTTPoison.get!( url,rheaders) do
         %Response{body: body, headers: headers,status_code:  200}  ->
           data = JSX.decode!(body)
@@ -135,10 +140,12 @@ defmodule ExGithubPoller do
           resp = {data,headers,next_link}
           filter(resp,param.last_event)
 
+          %Response{headers: headers,status_code:  304}  ->
+            { [],Map.new(headers),nil}
 
       end
 
-        end
+      end
 
 
   defp next_link(%{"Link" => link} ) do

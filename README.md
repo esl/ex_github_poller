@@ -133,3 +133,44 @@ x = ExGithubPoller.events("bryanhuntesl", "test_repo", %ExGithubPoller.Param{las
   limit_reset: 1559922999
 }
 ```
+
+## Fetching events - using a prior ETag to set the conditional 'If-None-Match' HTTP header :
+
+Demonstrate zero ratelimit cost.
+
+First invocation :
+
+```elixir
+iex(39)> x = ExGithubPoller.events("bryanhuntesl", "test_repo", %ExGithubPoller.Param{last_event: 9771755098, etag: etag}) 
+
+16:36:46.475 [debug] bryanhuntesl/test_repo - start
+ 
+16:36:46.871 [debug] bryanhuntesl/test_repo - no next link
+%{
+  etag: "\"b6364b00c3926445e3b85f2c31f25576\"",
+  events: [],
+  limit_limit: 5000,
+  limit_remaining: 4989,
+  limit_reset: 1559925407 
+}
+
+```
+
+Second invocation - note the unchanged rate limit :
+
+```Elixir
+
+iex(40)> x = ExGithubPoller.events("bryanhuntesl", "test_repo", %ExGithubPoller.Param{last_event: 9771755098, etag: etag}) 
+
+16:36:50.156 [debug] bryanhuntesl/test_repo - start
+
+16:36:50.521 [debug] bryanhuntesl/test_repo - no next link
+%{
+  etag: "\"b6364b00c3926445e3b85f2c31f25576\"",
+  events: [],
+  limit_limit: 5000,
+  limit_remaining: 4989,
+  limit_reset: 1559925410 
+}
+```
+
