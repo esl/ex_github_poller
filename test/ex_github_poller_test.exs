@@ -24,15 +24,17 @@ defmodule ExGithubPollerTest do
     end
   end
 
+  # Doesn't work - https://github.com/parroty/exvcr/issues/134
   # test "list events etag " do
   #   ExVCR.Config.filter_request_headers("Authorization")
   #   use_cassette "list_events_etag" , match_requests_on: [ :headers, :query , :request_body ] do
 
-  #     etag = "\"b6364b00c3926445e3b85f2c31f25576\""
+  #     x = ExGithubPoller.events("bryanhuntesl", "test_repo", %ExGithubPoller.Param{} )
+  #     assert length(x.events) == 152
 
-  #     y = ExGithubPoller.events("bryanhuntesl", "test_repo", %ExGithubPoller.Param{etag: etag} )
+  #     y = ExGithubPoller.events("bryanhuntesl", "test_repo", %ExGithubPoller.Param{etag: x.etag} )
   #     assert length(y.events) == 0
-  #     # assert y[:limit_remaining] == x[:limit_remaining]
+  #     assert y.limit_remaining == x.limit_remaining
 
   #   end
   # end
