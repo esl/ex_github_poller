@@ -1,0 +1,43 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": {
+        "Authorization": "***",
+        "If-None-Match": "\"b6364b00c3926445e3b85f2c31f25576\""
+      },
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://api.github.com/repos/bryanhuntesl/test_repo/events"
+    },
+    "response": {
+      "binary": false,
+      "body": "",
+      "headers": {
+        "Date": "Fri, 07 Jun 2019 16:21:45 GMT",
+        "Content-Type": "application/octet-stream",
+        "Server": "GitHub.com",
+        "Status": "304 Not Modified",
+        "X-RateLimit-Limit": "5000",
+        "X-RateLimit-Remaining": "4985",
+        "X-RateLimit-Reset": "1559928104",
+        "Cache-Control": "private, max-age=60, s-maxage=60",
+        "Vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+        "ETag": "\"b6364b00c3926445e3b85f2c31f25576\"",
+        "Last-Modified": "Thu, 06 Jun 2019 14:11:17 GMT",
+        "Access-Control-Expose-Headers": "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+        "X-Frame-Options": "deny",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'none'",
+        "X-GitHub-Request-Id": "0887:3D624:356EEB5:431F1AE:5CFA8F18"
+      },
+      "status_code": 304,
+      "type": "ok"
+    }
+  }
+]
