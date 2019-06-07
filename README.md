@@ -5,6 +5,20 @@ So … a poller for github repositories - calls the events url and pages through
 1. Pass the etag when making the first request - if you do so the request doesn’t count against your rate limit.
 2. Each event has an id and created date , only fetch and/or iterate if events have an id higher than the provided id e.g. ` “created_at” => "2019-06-06T13:54:12Z", "id" => "9771612375",`
 
+# Running 
+
+Requires the environmental variable GITHUB_TOKEN to be set.
+
+On application startup this variable is read and merged into the application.
+config under the key :ex_github_poller, token
+
+You can generate such tokens at : https://github.com/settings/tokens
+
+Generate a token with minimum priv - I found that "notifications, repo" were
+sufficient.
+
+This is alpha, alpha, alpha stuff - expect the API to change.
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
