@@ -69,9 +69,16 @@ defmodule ExGithubPoller do
 
   @spec request(binary) :: {any, map, any}
   def request(url) do
+
+    # TODO - this needs to be stored in such a way it can be dynamically updated
+    # TODO - provide a plugable strategy or something.
+    token = Application.get_env(:ex_github_poller,:token)
+
     rheaders = %{
-      "Authorization" => "token 8c387300a368f4289746f118879d4ee90586897b"
+      "Authorization" => "token #{token}"
     }
+
+
     %Response{body: body, headers: headers,status_code:  200}  =
       HTTPoison.get!( url,rheaders)
 
