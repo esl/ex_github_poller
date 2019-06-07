@@ -1,17 +1,18 @@
+
+defmodule ExGithubPoller.Application do
+
+  use Application
+
+  def start(_type, _args) do
+    IO.puts(:stderr, "starting")
+    Confex.resolve_env!(:ex_github_poller)
+    children = []
+    Supervisor.start_link(children, strategy: :one_for_one)
+  end
+
+end
+
 defmodule ExGithubPoller do
-  @moduledoc """
-  Documentation for ExGithubPoller.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> ExGithubPoller.hello()
-      :world
-
-  """
 
   defmodule ExGithubPoller.Param do
     defstruct since: nil, etag: nil, auth: nil
@@ -19,7 +20,6 @@ defmodule ExGithubPoller do
 
   alias ExGithubPoller.Param
   alias HTTPoison.Response
-
 
 
   def events(owner,repo, param \\ %Param{} ) do
@@ -67,9 +67,10 @@ defmodule ExGithubPoller do
 
   end
 
+  @spec request(binary) :: {any, map, any}
   def request(url) do
     rheaders = %{
-      "Authorization" => "token 02422f0112e3e315fb004d26876eae8318de4ae7"
+      "Authorization" => "token 8c387300a368f4289746f118879d4ee90586897b"
     }
     %Response{body: body, headers: headers,status_code:  200}  =
       HTTPoison.get!( url,rheaders)
