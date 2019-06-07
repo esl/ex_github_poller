@@ -36,3 +36,100 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/ex_github_poller](https://hexdocs.pm/ex_github_poller).
 
+## Examples
+
+Fetching events with a last_event filter
+
+```text
+x = ExGithubPoller.events("bryanhuntesl", "test_repo", %ExGithubPoller.Param{last_event: 9771755098} )
+
+15:56:38.594 [debug] bryanhuntesl/test_repo - start
+ 
+15:56:38.928 [debug] bryanhuntesl/test_repo - no next link
+%{
+  etag: "\"b6364b00c3926445e3b85f2c31f25576\"",
+  events: [
+    %{
+      "actor" => %{
+        "avatar_url" => "https://avatars.githubusercontent.com/u/31992054?",
+        "display_login" => "bryanhuntesl",
+        "gravatar_id" => "",
+        "id" => 31992054,
+        "login" => "bryanhuntesl",
+        "url" => "https://api.github.com/users/bryanhuntesl"
+      },
+      "created_at" => "2019-06-06T14:11:17Z",
+      "id" => "9771755702",
+      "payload" => %{
+        "before" => "7d73e4713c6d924a848f3c90fbc626139169f77e",
+        "commits" => [
+          %{
+            "author" => %{
+              "email" => "bryan.hunt@erlang-solutions.com",
+              "name" => "bryan"
+            },
+            "distinct" => true,
+            "message" => "Thu  6 Jun 2019 15:11:13 BST",
+            "sha" => "5d26a333a088ebfd5704c3ed35d16b714e5be9c0",
+            "url" => "https://api.github.com/repos/bryanhuntesl/test_repo/commits/5d26a333a088ebfd5704c3ed35d16b714e5be9c0"
+          }
+        ],
+        "distinct_size" => 1,
+        "head" => "5d26a333a088ebfd5704c3ed35d16b714e5be9c0",
+        "push_id" => 3687315391,
+        "ref" => "refs/heads/master",
+        "size" => 1
+      },
+      "public" => true,
+      "repo" => %{
+        "id" => 190588048,
+        "name" => "bryanhuntesl/test_repo",
+        "url" => "https://api.github.com/repos/bryanhuntesl/test_repo"
+      },
+      "type" => "PushEvent"
+    },
+    %{
+      "actor" => %{
+        "avatar_url" => "https://avatars.githubusercontent.com/u/31992054?",
+        "display_login" => "bryanhuntesl",
+        "gravatar_id" => "",
+        "id" => 31992054,
+        "login" => "bryanhuntesl",
+        "url" => "https://api.github.com/users/bryanhuntesl"
+      },
+      "created_at" => "2019-06-06T14:11:13Z",
+      "id" => "9771755098",
+      "payload" => %{
+        "before" => "7512b2aa7a17937f24a30eddc179f8388841a843",
+        "commits" => [
+          %{
+            "author" => %{
+              "email" => "bryan.hunt@erlang-solutions.com",
+              "name" => "bryan"
+            },
+            "distinct" => true,
+            "message" => "Thu  6 Jun 2019 15:11:08 BST",
+            "sha" => "7d73e4713c6d924a848f3c90fbc626139169f77e",
+            "url" => "https://api.github.com/repos/bryanhuntesl/test_repo/commits/7d73e4713c6d924a848f3c90fbc626139169f77e"
+          }
+        ],
+        "distinct_size" => 1,
+        "head" => "7d73e4713c6d924a848f3c90fbc626139169f77e",
+        "push_id" => 3687315054,
+        "ref" => "refs/heads/master",
+        "size" => 1
+      },
+      "public" => true,
+      "repo" => %{
+        "id" => 190588048,
+        "name" => "bryanhuntesl/test_repo",
+        "url" => "https://api.github.com/repos/bryanhuntesl/test_repo"
+      },
+      "type" => "PushEvent"
+    }
+  ],
+  limit_limit: 5000,
+  limit_remaining: 4999,
+  limit_reset: 1559922999
+}
+```

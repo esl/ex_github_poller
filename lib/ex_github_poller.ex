@@ -12,63 +12,112 @@ defmodule ExGithubPoller.Application do
 
 end
 
+defmodule ExGithubPoller.Param do
+  defstruct last_event: nil, etag: nil
+end
 defmodule ExGithubPoller do
 
-  defmodule ExGithubPoller.Param do
-    defstruct since: nil, etag: nil, auth: nil
-  end
 
   alias ExGithubPoller.Param
   alias HTTPoison.Response
+  import Logger
 
-
+  @spec events(any, any, any) :: any
   def events(owner,repo, param \\ %Param{} ) do
 
-    # {"Authorization", "token #{token}"}
     url = "https://api.github.com/repos/#{owner}/#{repo}/events"
-    # x = Tentacat.get("repos/bryanhuntesl/test_repo/events", %Tentacat.Client{}, [], [pagination: :manual])
-    # stream = get("repos/#{owner}/#{repo}/events", client, [], [pagination: :stream])
-    # stream |> Stream.take_while(fn(x) -> String.to_integer(x["id"])  >  latest_event_id end) |> Enum.to_list
 
-
+    # TODO : needs handling for the following cases
+    # 1. unauthorized/non-existent repo - status_code: 401
+    # 2. rate limit exceeded - {"X-RateLimit-Limit", "60"}, {"X-RateLimit-Remaining", "0"}, {"X-RateLimit-Reset", "1559908212"} status_code: 403
     stream = Stream.resource(
       fn -> nil end,
       fn acc ->
         case acc do
           nil ->
-            data = request(url)
+            debug("#{owner}/#{repo} - start")
+            data = request(url,param)
             {[data],data}
           {_,_,nil} ->
-            # IO.puts(:stderr,"nil")
+            debug("#{owner}/#{repo} - no next link")
             {:halt,nil}
           {_,_,next} ->
             # IO.puts(:stderr,"next")
-            data = request(next)
+            debug("#{owner}/#{repo} - next")
+            data = request(next,param)
             {[data],data }
-          _ ->
+          unexpected ->
             # IO.puts(:stderr,"bad" )
+            error("#{owner}/#{repo} - #{inspect(unexpected)} ")
            {:halt,nil}
         end
       end,
       fn _ -> nil end
     )
 
-    # GOOD TO HERE...gg
+    # GOOD TO HERE...
+
+    # require IEx ; IEx.pry()
 
     res = stream |> Enum.to_list |> List.flatten
 
     {_,headers,_}= hd(res)
+
     etag = Map.get( headers, "ETag")
+    end_headers =  List.last( res |> Enum.map(&( elem(&1,1)   )) )
+    limit_limit = String.to_integer(end_headers["X-RateLimit-Limit"])
+    limit_remaining = String.to_integer(end_headers["X-RateLimit-Remaining"])
+    limit_reset = String.to_integer(end_headers["X-RateLimit-Reset"])
 
     # # res2  = res |> Enum.flat_map_reduce([], fn({body,_,_},acc) ->  [body] ++ acc end)
 
     # {etag, res2}
     # stream |> Enum.to_list |> List.flatten
+    # require IEx ; IEx.pry()
+    ret = res |> Enum.map(&( elem(&1,0) )) |> List.flatten
+      %{etag: etag,
+      limit_limit: limit_limit,
+      limit_remaining: limit_remaining,
+      limit_reset: limit_reset,
+      events: ret}
+  end
+
+
+  def filter(data, nil ) do
+    data
+  end
+
+  def filter({events,headers,next_link} = data, last_event) do
+
+    # require IEx ; IEx.pry()
+
+    reducer = fn(event,{changed,l} = acc ) ->
+
+      case changed do
+        true -> acc
+        false ->
+          case String.to_integer(event["id"]) > last_event do
+            true -> {false, l ++ [event]}
+            false -> {true, l ++ [event]}
+          end
+
+      end
+
+
+    end
+
+
+
+    case events |> Enum.reduce({false,[]},reducer) do
+      {false, events} -> {events,headers,next_link}
+      {true, events}  -> {events,headers,nil}
+    end
+
 
   end
 
-  @spec request(binary) :: {any, map, any}
-  def request(url) do
+  @spec request(binary,ExGithubPoller.Param.t ) :: {any, map, any}
+  def request(url, param) do
 
     # TODO - this needs to be stored in such a way it can be dynamically updated
     # TODO - provide a plugable strategy or something.
@@ -78,16 +127,18 @@ defmodule ExGithubPoller do
       "Authorization" => "token #{token}"
     }
 
+    case HTTPoison.get!( url,rheaders) do
+        %Response{body: body, headers: headers,status_code:  200}  ->
+          data = JSX.decode!(body)
+          headers = Map.new(headers)
+          next_link = next_link(headers)
+          resp = {data,headers,next_link}
+          filter(resp,param.last_event)
 
-    %Response{body: body, headers: headers,status_code:  200}  =
-      HTTPoison.get!( url,rheaders)
 
-      body = JSX.decode!(body)
-      headers = Map.new(headers)
-      next_link = next_link(headers)
+      end
 
-      {body,headers,next_link}
-  end
+        end
 
 
   defp next_link(%{"Link" => link} ) do
