@@ -1,4 +1,5 @@
 # ExGithubPoller
+_not ready for use_
 
 So … a poller for github repositories - calls the events url - what it will do to avoid massive data usage / rate limiting is two things  : 
 1. Pass the etag when making the first request - if you do so the request doesn’t count against your rate limit.
