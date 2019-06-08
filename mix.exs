@@ -15,7 +15,7 @@ defmodule ExGithubPoller.MixProject do
   defp package() do
     [
       # These are the default files included in the package
-      description: "simple library to pull repository events from github"
+      description: "simple library to pull repository events from github",
       files: ~w(lib .formatter.exs mix.exs README* LICENSE*
          ),
       licenses: ["Apache-2.0"],
