@@ -35,7 +35,7 @@ defmodule ExGithubPoller.MixProject do
   defp deps do
     [
       {:confex, "~> 3.4.0"},
-      {:tentacat, "~> 1.4.0"},
+      {:tentacat, "~> 1.6.1"},
       {:exvcr, "~> 0.10", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev}
       # {:dep_from_hexpm, "~> 0.3.0"},
