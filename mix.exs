@@ -34,7 +34,7 @@ defmodule ExGithubPoller.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:confex, "~> 3.4.0"},
+      {:confex, "~> 3.5.0"},
       {:tentacat, "~> 1.4.0"},
       {:exvcr, "~> 0.10", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev}
